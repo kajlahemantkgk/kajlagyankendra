@@ -1,32 +1,21 @@
-/* --- Google Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 :root {
     --primary-glow: #00d2ff;
     --secondary-glow: #3a7bd5;
-    --accent-glow: #ff007f;
     --glass-bg: rgba(255, 255, 255, 0.12);
     --glass-border: rgba(255, 255, 255, 0.25);
     --text-white: #ffffff;
-    --dark-bg: #0f172a;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
 }
 
 body {
     background: radial-gradient(circle at top right, #1a2a6c, #b21f1f, #fdbb2d);
     background-attachment: fixed;
     color: var(--text-white);
+    font-family: 'Poppins', sans-serif;
     min-height: 100vh;
-    overflow-x: hidden;
 }
 
-/* --- Header & Navigation --- */
 header {
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(15px);
@@ -35,253 +24,70 @@ header {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--glass-border);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    position: sticky; top: 0; z-index: 1000;
 }
 
 .logo h2 {
-    font-weight: 700;
-    text-transform: uppercase;
     background: linear-gradient(to right, #00d2ff, #91ff00);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 5px rgba(0,210,255,0.5));
 }
 
 .nav-links a, .auth-trigger {
-    color: white;
-    text-decoration: none;
-    margin-left: 10px;
-    font-weight: 600;
-    font-size: 13px;
-    padding: 8px 18px;
-    border-radius: 30px;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    transition: 0.4s;
-    cursor: pointer;
-    display: inline-block;
+    color: white; text-decoration: none; padding: 8px 18px;
+    border-radius: 30px; background: var(--glass-bg);
+    border: 1px solid var(--glass-border); font-size: 13px; cursor: pointer;
 }
 
-.nav-links a:hover, .auth-trigger:hover {
-    background: var(--primary-glow);
-    box-shadow: 0 0 15px var(--primary-glow);
-    border-color: transparent;
-}
+.container { padding: 25px; max-width: 1000px; margin: 0 auto; }
 
-/* --- Container & Titles --- */
-.container {
-    padding: 25px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
+.test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
 
-.section-title {
-    margin-top: 30px;
-    margin-bottom: 20px;
-    font-size: 22px;
-    border-left: 4px solid var(--primary-glow);
-    padding-left: 15px;
-    text-shadow: 0 0 10px rgba(255,255,255,0.2);
-}
-
-/* --- Grid System --- */
-.test-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-bottom: 40px;
-}
-
-/* --- Glassmorphic Card --- */
 .card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 25px;
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    transition: 0.3s ease;
-    animation: fadeIn 0.6s ease-out;
+    background: var(--glass-bg); backdrop-filter: blur(20px);
+    border-radius: 20px; padding: 25px; border: 1px solid var(--glass-border);
 }
 
-.card:hover {
-    border-color: var(--primary-glow);
-    transform: translateY(-5px);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- Glow Button Logic (Fixed) --- */
+/* --- Glow Buttons --- */
 .glow-button, .btn-play {
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
-    color: white;
-    padding: 14px;
-    border-radius: 15px;
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
-    transition: 0.3s all ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    color: white; padding: 12px; border-radius: 12px;
+    display: block; text-align: center; text-decoration: none;
+    font-weight: 700; border: none; cursor: pointer;
 }
 
-/* बटन के अंदर शाइन इफेक्ट */
-.glow-button::before, .btn-play::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+.glow-button::before {
+    content: ''; position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
     transition: 0.5s;
 }
 
-.glow-button:hover, .btn-play:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 25px var(--primary-glow);
-    filter: brightness(1.1);
+.glow-button:hover::before { left: 100%; }
+
+/* --- Quiz Styles --- */
+.option-btn {
+    display: block; width: 100%; padding: 15px; margin: 10px 0;
+    background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border);
+    border-radius: 10px; color: white; cursor: pointer; text-align: left;
 }
 
-.glow-button:hover::before, .btn-play:hover::before {
-    left: 100%;
-}
+.correct { background: #27ae60 !important; }
+.wrong { background: #e74c3c !important; }
 
-/* --- Modal & Auth Styling --- */
+/* --- Modal --- */
 .modal {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    padding: 20px;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 2000;
 }
 
-.auth-card {
-    width: 100%;
-    max-width: 400px;
-    background: rgba(15, 23, 42, 0.95);
-    border: 1px solid var(--glass-border);
-    border-radius: 25px;
-    padding: 35px;
-    box-shadow: 0 0 40px rgba(0, 210, 255, 0.2);
-}
+.auth-card { background: #111; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
 
-.auth-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 5px;
-    border-radius: 12px;
-}
+.tab-btn { background: none; border: none; color: white; padding: 10px; cursor: pointer; }
+.tab-btn.active { border-bottom: 2px solid var(--primary-glow); color: var(--primary-glow); }
 
-.tab-btn {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    background: transparent;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: 0.3s;
-}
-
-.tab-btn.active {
-    background: var(--primary-glow);
-    box-shadow: 0 0 15px var(--primary-glow);
-}
-
-/* --- Input Styling --- */
 .input-group input {
-    width: 100%;
-    padding: 14px 20px;
-    margin-bottom: 15px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-    color: white;
-    outline: none;
-    transition: 0.3s;
+    width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px;
+    border: 1px solid #444; background: #222; color: white;
 }
-
-.input-group input:focus {
-    border-color: var(--primary-glow);
-    box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
-}
-
-/* --- NCERT Class Boxes --- */
-.class-btn-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
-}
-
-.class-box {
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--glass-border);
-    border-radius: 15px;
-    padding: 15px;
-    color: white;
-    text-align: center;
-    transition: 0.3s;
-}
-
-.class-box:hover {
-    background: var(--primary-glow);
-    transform: translateY(-5px);
-    box-shadow: 0 0 15px var(--primary-glow);
-}
-
-.class-num { font-size: 22px; font-weight: 700; display: block; }
-.class-text { font-size: 11px; opacity: 0.8; }
-
-/* --- Quiz Specifics --- */
-.option {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    color: white;
-    text-align: left;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.option:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: var(--primary-glow);
-    transform: translateX(5px);
-}
-
-/* --- Mobile Adjustments --- */
-@media (max-width: 600px) {
-    header { padding: 10px 4%; }
-    .logo h2 { font-size: 18px; }
-    .nav-links a { padding: 6px 12px; font-size: 11px; margin-left: 5px; }
-    .container { padding: 15px; }
-    .test-grid { grid-template-columns: 1fr; }
-    .class-btn-container { grid-template-columns: repeat(3, 1fr); }
-}
-
