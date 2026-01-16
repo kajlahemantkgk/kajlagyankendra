@@ -164,3 +164,29 @@ function showQuestion() {
         box.appendChild(b);
     });
 }
+function handleRegister() {
+    const name = document.getElementById("reg-name").value;
+    const email = document.getElementById("reg-email").value;
+    const pass = document.getElementById("reg-pass").value;
+
+    if (name && email.includes("@") && pass.length >= 4) {
+        generatedOTP = Math.floor(1000 + Math.random() * 9000);
+        
+        const templateParams = {
+            to_email: email,    // यह टेम्पलेट के 'To Email' {{to_email}} बॉक्स में जाएगा
+            name: name,         // यह {{name}} की जगह दिखेगा
+            otp_code: generatedOTP // यह {{otp_code}} की जगह दिखेगा
+        };
+
+        emailjs.send('service_mfwhnrm', 'template_uupjne6', templateParams)
+            .then(() => {
+                alert("OTP आपके ईमेल " + email + " पर भेज दिया गया है।");
+                document.getElementById("reg-section").style.display = "none";
+                document.getElementById("otp-section").style.display = "block";
+            }, (err) => {
+                alert("ईमेल भेजने में विफल! सेटिंग्स चेक करें।");
+            });
+    } else {
+        alert("कृपया जानकारी सही से भरें।");
+    }
+}
