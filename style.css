@@ -242,3 +242,23 @@ header {
 }
 
 .class-box:hover { background: var(--primary-glow); color: #000; }
+
+/* सही उत्तर का रंग */
+.option-btn.correct {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: none;
+}
+
+/* गलत उत्तर का रंग */
+.option-btn.wrong {
+    background-color: #dc3545 !important;
+    color: white !important;
+    border: none;
+}
+
+/* बटन दबने के बाद कर्सर रोकना */
+.option-btn:disabled {
+    cursor: not-allowed;
+    opacity: 1;
+}
