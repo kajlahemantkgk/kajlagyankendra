@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>राजस्थान भूगोल टेस्ट</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+    <div class="container" style="max-width: 600px;">
+        <div class="card">
+            <h2 id="q-text">सवाल लोड हो रहा है...</h2>
+            <div id="options-box"></div>
+            <button id="next-btn" class="btn-play" style="display:none; width: 100%;">अगला सवाल</button>
+            <div id="result-box" style="display:none;">
+                <h3>आपका स्कोर: <span id="score-val"></span> / 5</h3>
+                <a href="index.html" class="btn-play">होम पेज पर जाएं</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="quiz.js"></script>
+    <script>
+        // यहाँ हर फाइल में अलग सवाल डालें
+        const myQuestions = [
+            { q: "राजस्थान का क्षेत्रफल कितना है?", opts: ["3,42,239", "2,42,239", "4,42,239", "5,42,239"], a: 0 },
+            { q: "सबसे ऊँची चोटी कौन सी है?", opts: ["शेर", "गुरुशिखर", "तारागढ़", "अचलगढ़"], a: 1 },
+            { q: "राजस्थान की लाइफलाइन?", opts: ["लूनी", "चम्बल", "बनास", "इन्दिरा गांधी नहर"], a: 3 },
+            { q: "पिंक सिटी किसे कहते हैं?", opts: ["कोटा", "अजमेर", "जयपुर", "जोधपुर"], a: 2 },
+            { q: "मरुस्थल का प्रवेश द्वार?", opts: ["जैसलमेर", "जोधपुर", "बीकानेर", "बाड़मेर"], a: 1 }
+        ];
+        startQuiz(myQuestions);
+    </script>
+</body>
+</html>
