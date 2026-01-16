@@ -1,1 +1,57 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCERT Class 6 Polity | KGK</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><h2>KGK</h2></div>
+        <nav class="nav-links"><a href="index.html">होम</a></nav>
+    </header>
+
+    <div class="container" style="max-width: 600px; margin-top: 30px;">
+        <div class="card">
+            <h4 style="color: #e67e22;">NCERT कक्षा 6 - राजनीति विज्ञान</h4>
+            <div id="quiz-header" style="display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-bottom: 15px;">
+                <span id="q-number">लोड हो रहा है...</span>
+                <span id="score-live">स्कोर: 0</span>
+            </div>
+            <hr>
+            <h2 id="q-text" style="min-height: 80px;">सवाल लोड हो रहा है...</h2>
+            <div id="options-box"></div>
+            <button id="next-btn" class="btn-play" style="display:none; width: 100%; border: none; cursor: pointer;">अगला सवाल</button>
+
+            <div id="result-box" style="display:none; text-align: center;">
+                <h2 style="color: #27ae60;">रिजल्ट</h2>
+                <p style="font-size: 28px; font-weight: bold;">आपका स्कोर: <span id="score-val" style="color: #e67e22;">0</span></p>
+                <p id="performance-msg" style="margin-bottom: 20px; font-weight: bold;"></p>
+                <div style="display: flex; gap: 10px; flex-direction: column;">
+                    <button onclick="location.reload()" class="btn-play" style="background: #3498db; border: none;">दोबारा कोशिश करें</button>
+                    <a href="index.html" class="btn-play" style="text-decoration: none; background: #7f8c8d;">होम पर जाएं</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="quiz.js"></script>
+
+    <script>
+        // आपका NCERT Class 6 Polity टैब का विशिष्ट CSV लिंक
+        const ncertPolityURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRXVXbbQVA_5tojtKMn0VRn_AHY_ZKkeyZ9HHAOvByexslRMfiGq_NXK--FeELRcR7Y5R75FVWc2NbT/pub?gid=1612170402&single=true&output=csv";
+
+        window.onload = () => {
+            // quiz.js के loadAutoQuestions फ़ंक्शन को कॉल करना
+            if (typeof loadAutoQuestions === "function") {
+                loadAutoQuestions(ncertPolityURL);
+            } else {
+                console.error("quiz.js फाइल लोड नहीं हो पाई!");
+                document.getElementById('q-text').innerText = "त्रुटी: quiz.js फ़ाइल नहीं मिली!";
+            }
+        };
+    </script>
+</body>
+</html>
 
