@@ -190,3 +190,41 @@ function handleRegister() {
         alert("कृपया जानकारी सही से भरें।");
     }
 }
+function showQuestion() {
+    const q = questions[currentIdx];
+    const qText = document.getElementById('q-text');
+    const box = document.getElementById('options-box');
+    
+    qText.innerText = q.q;
+    box.innerHTML = "";
+    
+    q.opts.forEach((opt, i) => {
+        const b = document.createElement('button');
+        b.innerText = opt;
+        b.className = "option-btn";
+        b.onclick = () => {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true); // दोबारा क्लिक रोकें
+
+            if(i === q.a) { 
+                b.classList.add('correct'); // हरा रंग
+                score++; 
+            } else { 
+                b.classList.add('wrong'); // लाल रंग
+                allBtns[q.a].classList.add('correct'); // सही वाला दिखाएं
+            }
+            
+            // 1.5 सेकंड बाद अगला सवाल अपने आप आएगा
+            setTimeout(() => {
+                currentIdx++;
+                if(currentIdx < questions.length) {
+                    showQuestion();
+                } else {
+                    alert("क्विज़ समाप्त! स्कोर: " + score + "/" + questions.length);
+                    location.href = "index.html"; // वापस होम पर
+                }
+            }, 1500);
+        };
+        box.appendChild(b);
+    });
+}
