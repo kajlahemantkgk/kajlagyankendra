@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGK Online Education | Best Quiz Portal</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo"><h2>KGK</h2></div>
+        <div class="menu-toggle" id="mobile-toggle"><span></span><span></span><span></span></div>
+        <nav class="nav-links" id="nav-list">
+            <a href="index.html">होम</a>
+            <span class="auth-trigger" id="open-auth" onclick="checkLogout()">लॉगिन / रजिस्टर</span>
+        </nav>
+    </header>
+
+    <div class="container" id="main-content" style="display:none;">
+        <h2 class="section-title">राजस्थान सामान्य ज्ञान</h2>
+        <div class="test-grid">
+            <div class="card"><h3>राजस्थान भूगोल</h3><a href="raj-geo.html" class="btn-play">शुरू करें</a></div>
+            <div class="card"><h3>राजस्थान इतिहास</h3><a href="raj-hist.html" class="btn-play">शुरू करें</a></div>
+            <div class="card"><h3>कला एवं संस्कृति</h3><a href="raj-art.html" class="btn-play">शुरू करें</a></div>
+            <div class="card"><h3>राजस्थान राजनीति</h3><a href="raj-polity.html" class="btn-play">शुरू करें</a></div>
+        </div>
+
+        <h2 class="section-title">भारत एवं विश्व जीके</h2>
+        <div class="test-grid">
+            <div class="card"><h3>भारत का भूगोल</h3><a href="ind-geo.html" class="btn-play">शुरू करें</a></div>
+            <div class="card"><h3>भारत का इतिहास</h3><a href="ind-hist.html" class="btn-play">शुरू करें</a></div>
+            <div class="card"><h3>भारत की राजनीति</h3><a href="ind-pol.html" class="btn-play">शुरू करें</a></div>
+        </div>
+    </div>
+
+    <div class="modal" id="authModal" style="display: flex;">
+        <div class="modal-content auth-card">
+            <div class="auth-tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">लॉगिन</button>
+                <button class="tab-btn" onclick="switchTab('register')">रजिस्टर</button>
+            </div>
+
+            <div id="login-section" class="auth-form">
+                <div class="input-group">
+                    <input type="email" id="login-email" placeholder="ईमेल आईडी" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="login-pass" placeholder="पासवर्ड" required>
+                </div>
+                <button class="submit-btn glow-button" onclick="handleLogin()">प्रवेश करें</button>
+                <p class="auth-footer">पासवर्ड भूल गए? <a href="javascript:void(0)" onclick="showForget()">यहाँ क्लिक करें</a></p>
+            </div>
+
+            <div id="forget-section" class="auth-form" style="display:none;">
+                <p style="color: rgba(255,255,255,0.7); font-size: 14px; text-align: center; margin-bottom: 20px;">
+                    अपनी ईमेल आईडी डालें, हम कोड भेजेंगे।
+                </p>
+                <div class="input-group">
+                    <input type="email" id="forget-email" placeholder="ईमेल आईडी" required>
+                </div>
+                <button class="submit-btn glow-button" onclick="sendEmailOTP()">OTP भेजें</button>
+                <p class="auth-footer"><a href="javascript:void(0)" onclick="switchTab('login')">वापस लॉगिन करें</a></p>
+            </div>
+
+            <div id="otp-section" class="auth-form" style="display:none;">
+                <p style="color: white; text-align: center; margin-bottom: 15px;">ईमेल पर भेजा गया 4 अंकों का कोड डालें</p>
+                <div class="input-group">
+                    <input type="text" id="otp-input-field" placeholder="0 0 0 0" style="text-align: center; letter-spacing: 10px; font-size: 20px;">
+                </div>
+                <button class="submit-btn glow-button" onclick="verifyOTP()">कोड वेरिफाई करें</button>
+            </div>
+
+            <div id="reg-section" class="auth-form" style="display:none;">
+                <div class="input-group">
+                    <input type="text" id="reg-name" placeholder="पूरा नाम" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="reg-email" placeholder="ईमेल आईडी" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="reg-pass" placeholder="नया पासवर्ड" required>
+                </div>
+                <button class="submit-btn glow-button" onclick="handleRegister()">अकाउंट बनाएं</button>
+                <p class="auth-footer">पहले से अकाउंट है? <a href="javascript:void(0)" onclick="switchTab('login')">लॉगिन करें</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init("Ff_fHMoX3s88PvoMe"); 
+       })();
+    </script>
+    
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => {
+                console.log('Service Worker Registered');
+            });
+        }
+    </script>
+    
+    <script src="quiz.js"></script>
+</body>
+</html>
