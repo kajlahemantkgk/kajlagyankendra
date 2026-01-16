@@ -1,3 +1,4 @@
+/* --- Google Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 :root {
@@ -8,14 +9,22 @@
     --text-white: #ffffff;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
 body {
     background: radial-gradient(circle at top right, #1a2a6c, #b21f1f, #fdbb2d);
     background-attachment: fixed;
     color: var(--text-white);
-    font-family: 'Poppins', sans-serif;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
+/* --- Header & Navigation --- */
 header {
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(15px);
@@ -24,70 +33,212 @@ header {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--glass-border);
-    position: sticky; top: 0; z-index: 1000;
+    position: sticky; 
+    top: 0; 
+    z-index: 1000;
 }
 
 .logo h2 {
+    font-weight: 700;
+    text-transform: uppercase;
     background: linear-gradient(to right, #00d2ff, #91ff00);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .nav-links a, .auth-trigger {
-    color: white; text-decoration: none; padding: 8px 18px;
-    border-radius: 30px; background: var(--glass-bg);
-    border: 1px solid var(--glass-border); font-size: 13px; cursor: pointer;
+    color: white; 
+    text-decoration: none; 
+    margin-left: 10px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 30px; 
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border); 
+    font-size: 13px; 
+    cursor: pointer;
+    transition: 0.3s;
 }
 
+.nav-links a:hover, .auth-trigger:hover {
+    background: var(--primary-glow);
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* --- Container & Grid --- */
 .container { padding: 25px; max-width: 1000px; margin: 0 auto; }
 
-.test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.section-title {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-size: 22px;
+    border-left: 4px solid var(--primary-glow);
+    padding-left: 15px;
+}
+
+.test-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 20px; 
+}
 
 .card {
-    background: var(--glass-bg); backdrop-filter: blur(20px);
-    border-radius: 20px; padding: 25px; border: 1px solid var(--glass-border);
+    background: var(--glass-bg); 
+    backdrop-filter: blur(20px);
+    border-radius: 20px; 
+    padding: 25px; 
+    border: 1px solid var(--glass-border);
+    text-align: center;
+    transition: 0.3s;
 }
+
+.card:hover { transform: translateY(-5px); border-color: var(--primary-glow); }
 
 /* --- Glow Buttons --- */
-.glow-button, .btn-play {
-    position: relative; overflow: hidden;
+.btn-play, .submit-btn {
+    position: relative; 
+    overflow: hidden;
     background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
-    color: white; padding: 12px; border-radius: 12px;
-    display: block; text-align: center; text-decoration: none;
-    font-weight: 700; border: none; cursor: pointer;
+    color: white; 
+    padding: 12px; 
+    border-radius: 12px;
+    display: block; 
+    text-align: center; 
+    text-decoration: none;
+    font-weight: 700; 
+    border: none; 
+    cursor: pointer;
+    width: 100%;
+    text-transform: uppercase;
+    transition: 0.3s;
 }
 
-.glow-button::before {
-    content: ''; position: absolute; top: 0; left: -100%;
+.btn-play:hover, .submit-btn:hover { box-shadow: 0 0 20px var(--primary-glow); }
+
+.btn-play::before, .submit-btn::before {
+    content: ''; 
+    position: absolute; 
+    top: 0; left: -100%;
     width: 100%; height: 100%;
     background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
     transition: 0.5s;
 }
 
-.glow-button:hover::before { left: 100%; }
+.btn-play:hover::before, .submit-btn:hover::before { left: 100%; }
+
+/* --- Modal & Box Centering (प्रोफेशनल सेंटरिंग) --- */
+
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 2000;
+}
+
+.auth-card {
+    width: 90%;
+    max-width: 400px;
+    background: #111;
+    padding: 35px;
+    border-radius: 25px;
+    border: 1px solid var(--glass-border);
+    text-align: center; /* कार्ड के अंदर सब कुछ सेंटर */
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+}
+
+/* --- Form Elements --- */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* फॉर्म के अंदर सब कुछ सेंटर */
+}
+
+.input-group { width: 100%; }
+
+.input-group input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: rgba(255,255,255,0.05);
+    color: white;
+    text-align: center; /* इनपुट के अंदर का टेक्स्ट सेंटर */
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus { border-color: var(--primary-glow); }
+
+.auth-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    background: rgba(255,255,255,0.05);
+    padding: 5px;
+    border-radius: 12px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    background: var(--primary-glow);
+    color: #000;
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.auth-footer {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #bbb;
+}
+
+.auth-footer a { color: var(--primary-glow); text-decoration: none; }
 
 /* --- Quiz Styles --- */
 .option-btn {
     display: block; width: 100%; padding: 15px; margin: 10px 0;
     background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border);
-    border-radius: 10px; color: white; cursor: pointer; text-align: left;
+    border-radius: 10px; color: white; cursor: pointer; text-align: center;
+    transition: 0.3s;
 }
 
-.correct { background: #27ae60 !important; }
-.wrong { background: #e74c3c !important; }
+.option-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--primary-glow); }
 
-/* --- Modal --- */
-.modal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 2000;
+.correct { background: #27ae60 !important; border: none; }
+.wrong { background: #e74c3c !important; border: none; }
+
+/* --- NCERT Boxes --- */
+.class-btn-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 20px;
 }
 
-.auth-card { background: #111; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
-
-.tab-btn { background: none; border: none; color: white; padding: 10px; cursor: pointer; }
-.tab-btn.active { border-bottom: 2px solid var(--primary-glow); color: var(--primary-glow); }
-
-.input-group input {
-    width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px;
-    border: 1px solid #444; background: #222; color: white;
+.class-box {
+    text-decoration: none;
+    background: var(--glass-bg);
+    padding: 15px;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    border: 1px solid var(--glass-border);
 }
+
+.class-box:hover { background: var(--primary-glow); color: #000; }
