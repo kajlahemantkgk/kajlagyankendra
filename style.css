@@ -371,3 +371,128 @@ header {
 @keyframes fadeIn {
     from { opacity: 0; } to { opacity: 1; }
 }
+// --- 1. Variables ---
+const authModal = document.getElementById("authModal");
+const mainContent = document.getElementById("main-content");
+const openAuth = document.getElementById("open-auth");
+let generatedOTP = null;
+
+let questions = [];
+let currentIdx = 0;
+let score = 0;
+
+// पेज लोड चेक
+window.onload = function() {
+    if (localStorage.getItem("isLoggedIn") === "true") {
+        showHome();
+    }
+};
+
+function showHome() {
+    if(mainContent) mainContent.style.display = "block";
+    if(authModal) authModal.style.display = "none";
+    if(openAuth) openAuth.innerText = "लॉगआउट";
+}
+
+// --- 2. Authentication ---
+function handleLogin() {
+    const email = document.getElementById("login-email").value;
+    const pass = document.getElementById("login-pass").value;
+    if (email.includes("@") && pass.length >= 4) {
+        localStorage.setItem("isLoggedIn", "true");
+        showHome();
+    } else { alert("सही ईमेल और पासवर्ड डालें"); }
+}
+
+function handleRegister() {
+    const email = document.getElementById("reg-email").value;
+    const name = document.getElementById("reg-name").value;
+    if (email && name) {
+        generatedOTP = Math.floor(1000 + Math.random() * 9000);
+        emailjs.send('service_mfwhnrm', 'template_uupjne6', {
+            to_email: email, name: name, otp_code: generatedOTP
+        }).then(() => {
+            alert("OTP भेजा गया");
+            document.getElementById("reg-section").style.display = "none";
+            document.getElementById("otp-section").style.display = "block";
+        });
+    }
+}
+
+function verifyOTP() {
+    const val = document.getElementById("otp-input-field").value;
+    if (val == generatedOTP) { alert("सफल!"); location.reload(); }
+}
+
+function checkLogout() {
+    if (localStorage.getItem("isLoggedIn") === "true") {
+        localStorage.removeItem("isLoggedIn");
+        location.reload();
+    }
+}
+
+function switchTab(type) {
+    document.getElementById("login-section").style.display = type === 'login' ? "block" : "none";
+    document.getElementById("reg-section").style.display = type === 'register' ? "block" : "none";
+}
+
+// --- 3. Advanced Quiz Logic (Next Button Included) ---
+
+async function loadAutoQuestions(url) {
+    try {
+        const res = await fetch(url);
+        const text = await res.text();
+        const rows = text.split('\n').slice(1);
+        questions = rows.map(r => {
+            const c = r.split(',');
+            if(c.length < 6) return null;
+            return { q: c[0], opts: [c[1], c[2], c[3], c[4]], a: parseInt(c[5]), exp: c[6] || "" };
+        }).filter(q => q !== null);
+        if(questions.length > 0) startQuiz();
+    } catch (e) { console.error("CSV Load Error"); }
+}
+
+function startQuiz() {
+    currentIdx = 0; score = 0;
+    showQuestion();
+}
+
+function showQuestion() {
+    const q = questions[currentIdx];
+    const qText = document.getElementById('q-text');
+    const box = document.getElementById('options-box');
+    const nextBtn = document.getElementById('next-btn');
+
+    if(nextBtn) nextBtn.style.display = "none"; // अगला सवाल आने तक छिपाएं
+    qText.innerText = `${currentIdx + 1}. ${q.q}`;
+    box.innerHTML = "";
+
+    q.opts.forEach((opt, i) => {
+        const b = document.createElement('button');
+        b.innerText = opt;
+        b.className = "option-btn";
+        b.onclick = () => {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+            
+            if(i === q.a) { b.classList.add('correct'); score++; }
+            else { b.classList.add('wrong'); allBtns[q.a].classList.add('correct'); }
+            
+            // उत्तर देने के बाद Next Button दिखाएं
+            if(nextBtn) {
+                nextBtn.style.display = "block";
+                nextBtn.onclick = () => {
+                    currentIdx++;
+                    if(currentIdx < questions.length) showQuestion();
+                    else finishQuiz();
+                };
+            }
+        };
+        box.appendChild(b);
+    });
+}
+
+function finishQuiz() {
+    alert("टेस्ट समाप्त! स्कोर: " + score + "/" + questions.length);
+    location.href = "index.html";
+}
