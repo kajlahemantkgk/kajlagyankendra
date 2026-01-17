@@ -88,6 +88,22 @@
 
     <div class="modal" id="authModal" style="display: none;">
         </div>
+    <div class="container" id="main-content" style="display:none;">
+    <div class="card">
+        <h3>राजस्थान इतिहास</h3>
+        <p>20 सवाल | 20 मिनट</p>
+        <button onclick="loadAutoQuestions('raj-hist.csv')" class="btn-play">टेस्ट शुरू करें</button>
+    </div>
+</div>
+
+<div class="container" id="quiz-view" style="display:none;">
+    <div class="card">
+        <div class="progress-container"><div id="progress-bar"></div></div>
+        <h3 id="q-text" style="text-align: left; margin-bottom: 20px;">लोड हो रहा है...</h3>
+        <div id="options-box"></div>
+    </div>
+</div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>emailjs.init("Ff_fHMoX3s88PvoMe");</script>
