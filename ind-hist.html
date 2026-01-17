@@ -3,59 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2 | Testbook Style Portal</title>
+    <title>भारत का इतिहास टेस्ट - KGK</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
     <header>
-        <div class="logo"><h2>2</h2></div> <nav class="nav-links">
-            <a href="index.html" class="active"><i class="fas fa-home"></i> होम</a>
-            <a href="#"><i class="fas fa-user"></i> प्रोफाइल</a>
+        <div class="logo"><h2>KGK</h2></div>
+        <nav class="nav-links">
+            <a href="index.html">होम</a>
         </nav>
     </header>
 
-    <div class="container">
-        <div class="welcome-box">
-            <h1>नमस्कार, अपनी तैयारी शुरू करें!</h1>
-            <p>नीचे दिए गए विषयों में से अपना टेस्ट चुनें</p>
-        </div>
+    <div class="container" style="max-width: 600px; margin-top: 50px;">
+        <div class="card">
+            <h4 style="color: #8e44ad;">विषय: भारत का इतिहास (Indian History)</h4>
+            <hr>
+            <h2 id="q-text" style="min-height: 80px;">सवाल लोड हो रहा है...</h2>
+            
+            <div id="options-box"></div>
 
-        <div class="quiz-grid">
-            <div class="category-title">राजस्थान सामान्य ज्ञान</div>
-            <div class="grid-container">
-                <a href="raj-geo.html" class="subject-card">
-                    <i class="fas fa-map-marked-alt"></i>
-                    <span>राजस्थान भूगोल</span>
-                </a>
-                <a href="raj-hist.html" class="subject-card">
-                    <i class="fas fa-history"></i>
-                    <span>राजस्थान इतिहास</span>
-                </a>
-                <a href="raj-art.html" class="subject-card">
-                    <i class="fas fa-palette"></i>
-                    <span>कला एवं संस्कृति</span>
-                </a>
-                <a href="raj-polity.html" class="subject-card">
-                    <i class="fas fa-landmark"></i>
-                    <span>राजस्थान राजनीति</span>
-                </a>
-            </div>
+            <button id="next-btn" class="btn-play" style="display:none; width: 100%; border: none; cursor: pointer;">अगला सवाल</button>
 
-            <div class="category-title">भारत सामान्य ज्ञान</div>
-            <div class="grid-container">
-                <a href="ind-geo.html" class="subject-card ind">
-                    <i class="fas fa-globe-asia"></i>
-                    <span>भारत का भूगोल</span>
-                </a>
-                <a href="ind-hist.html" class="subject-card ind">
-                    <i class="fas fa-archway"></i>
-                    <span>भारत का इतिहास</span>
-                </a>
+            <div id="result-box" style="display:none;">
+                <h3 style="color: #2c3e50;">टेस्ट पूरा हुआ!</h3>
+                <p style="font-size: 24px; font-weight: bold;">आपका स्कोर: <span id="score-val" style="color: #8e44ad;">0</span></p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button onclick="location.reload()" class="btn-play" style="background: #7f8c8d; border: none; cursor: pointer;">दोबारा दें</button>
+                    <a href="index.html" class="btn-play" style="text-decoration: none;">होम पर जाएं</a>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="quiz.js"></script>
+
+    <script>
+        // भारत का इतिहास टैब का आपका विशिष्ट CSV लिंक
+        const indHistSheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRXVXbbQVA_5tojtKMn0VRn_AHY_ZKkeyZ9HHAOvByexslRMfiGq_NXK--FeELRcR7Y5R75FVWc2NbT/pub?gid=939839999&single=true&output=csv";
+
+        window.onload = () => {
+            // quiz.js के loadAutoQuestions फ़ंक्शन को कॉल करना
+            if (typeof loadAutoQuestions === "function") {
+                loadAutoQuestions(indHistSheetURL);
+            } else {
+                console.error("quiz.js फाइल लोड नहीं हो पाई!");
+            }
+        };
+    </script>
 </body>
 </html>
