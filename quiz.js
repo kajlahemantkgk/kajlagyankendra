@@ -1,261 +1,247 @@
+
 /**
- * KGK Education - Professional Quiz Engine
- * Features: CSV Loading, Negative Marking, Timer, Solution Box
- */// --- 4. Quiz Engine (Error Fixed & Professional Action) ---
-let questions = [];
-let currentIdx = 0;
-let score = 0;
+ * KGK Online Education - Logic Engine
+ * Features: Auth System, EmailJS Integration, CSV Quiz Loader
+ */
 
-async function loadAutoQuestions(url) {
-    try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("File not found"); // एरर हैंडलिंग जोड़ी गई
-        
-        const text = await res.text();
-        const rows = text.split('\n').slice(1); // Header हटाना
-        
-        questions = rows.map(r => {
-            const c = r.split(',');
-            if(c.length < 6) return null;
-            return { 
-                q: c[0].trim(), 
-                opts: [c[1].trim(), c[2].trim(), c[3].trim(), c[4].trim()], 
-                a: parseInt(c[5].trim()) 
-            };
-        }).filter(q => q !== null);
-
-        if(questions.length > 0) {
-            // UI Switch: होम छुपाएं और क्विज़ दिखाएं
-            document.getElementById("main-content").style.display = "none";
-            document.getElementById("quiz-view").style.display = "block";
-            startQuiz();
-        } else {
-            alert("CSV फ़ाइल खाली है या सही फ़ॉर्मेट में नहीं है।");
-        }
-    } catch (e) {
-        console.error("Quiz Load Error:", e);
-        alert("डेटा लोड करने में समस्या हुई। कृपया इंटरनेट और CSV फ़ाइल का पाथ चेक करें।");
-    }
-}
-
-function startQuiz() {
-    currentIdx = 0; 
-    score = 0;
-    showQuestion();
-}
-
-function showQuestion() {
-    const q = questions[currentIdx];
-    const qText = document.getElementById('q-text');
-    const box = document.getElementById('options-box');
-    const progBar = document.getElementById('progress-bar');
-    
-    // प्रोग्रेस बार अपडेट करें
-    if(progBar) progBar.style.width = ((currentIdx / questions.length) * 100) + "%";
-
-    qText.innerText = `${currentIdx + 1}. ${q.q}`;
-    box.innerHTML = "";
-    
-    q.opts.forEach((opt, i) => {
-        const b = document.createElement('button');
-        b.innerText = opt;
-        b.className = "option-btn";
-        b.onclick = () => handleSelection(i, b);
-        box.appendChild(b);
-    });
-}
-
-function handleSelection(selectedIndex, btn) {
-    const allBtns = document.querySelectorAll('.option-btn');
-    allBtns.forEach(b => b.disabled = true); // दोबारा क्लिक रोकें
-
-    const correctIdx = questions[currentIdx].a;
-
-    if (selectedIndex === correctIdx) {
-        btn.classList.add('correct');
-        score++;
-    } else {
-        btn.classList.add('wrong');
-        allBtns[correctIdx].classList.add('correct'); // सही जवाब दिखाना
-    }
-
-    // ऑटो-नेक्स्ट एक्शन
-    setTimeout(() => {
-        currentIdx++;
-        if (currentIdx < questions.length) {
-            showQuestion();
-        } else {
-            alert(`क्विज़ समाप्त! आपका स्कोर: ${score}/${questions.length}`);
-            location.reload();
-        }
-    }, 1500);
-}
-
-
-// --- 1. State Management ---
-let questions = [];
-let currentIdx = 0;
-let score = 0;
-let timeLeft = 60; // हर सवाल के लिए 60 सेकंड
-let timerInterval;
-const NEGATIVE_MARK = 0.25;
-
-// Selectors
-const homeView = document.getElementById("home-view");
-const quizView = document.getElementById("quiz-view");
-const authModal = document.getElementById("authModal");
-const openAuth = document.getElementById("open-auth");
-
-// --- 2. Auth & UI Initial Load ---
-window.onload = function() {
-    if (localStorage.getItem("isLoggedIn") === "true") {
-        if(openAuth) openAuth.innerText = "लॉगआउट";
+// --- 1. Global Variables & Selectors ---
+const UI = {
+    authModal: document.getElementById("authModal"),
+    mainContent: document.getElementById("main-content"),
+    authTrigger: document.getElementById("open-auth"),
+    sections: {
+        login: document.getElementById("login-section"),
+        register: document.getElementById("reg-section"),
+        forget: document.getElementById("forget-section"),
+        otp: document.getElementById("otp-section")
+    },
+    tabs: {
+        login: document.getElementById("login-tab-btn"),
+        register: document.getElementById("reg-tab-btn")
     }
 };
 
-function checkLogout() {
-    if (localStorage.getItem("isLoggedIn") === "true") {
-        if (confirm("क्या आप लॉगआउट करना चाहते हैं?")) {
-            localStorage.removeItem("isLoggedIn");
-            location.reload();
-        }
-    } else {
-        // अगर modal खाली है, तो यहाँ alert या redirect दिखाएँ
-        alert("कृपया लॉगिन करें!");
-        if(authModal) authModal.style.display = "flex";
+let generatedOTP = null;
+let quizState = {
+    questions: [],
+    currentIdx: 0,
+    score: 0
+};
+
+// EmailJS Config
+const EMAIL_CONFIG = {
+    SERVICE_ID: 'service_mfwhnrm',
+    TEMPLATE_ID: 'template_uupjne6'
+};
+
+// --- 2. Initialization & UI Control ---
+
+window.onload = () => {
+    checkLoginStatus();
+};
+
+function checkLoginStatus() {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    if (isLoggedIn) {
+        showAuthenticatedUI();
     }
 }
 
-// --- 3. Quiz Engine (CSV Loader) ---
-async function loadQuiz(url) {
-    // लॉगिन चेक
+function showAuthenticatedUI() {
+    if (UI.mainContent) UI.mainContent.style.display = "block";
+    if (UI.authModal) UI.authModal.style.display = "none";
+    if (UI.authTrigger) {
+        UI.authTrigger.innerText = "लॉगआउट";
+        UI.authTrigger.onclick = handleLogout;
+    }
+}
+
+function toggleModal(show) {
+    if (UI.authModal) UI.authModal.style.display = show ? 'flex' : 'none';
+}
+
+// --- 3. Authentication Logic ---
+
+function switchTab(type) {
+    const isLogin = type === 'login';
+    
+    // Toggle Sections
+    UI.sections.login.style.display = isLogin ? "block" : "none";
+    UI.sections.register.style.display = isLogin ? "none" : "block";
+    UI.sections.forget.style.display = "none";
+    UI.sections.otp.style.display = "none";
+
+    // Toggle Tab Active Class
+    UI.tabs.login.classList.toggle("active", isLogin);
+    UI.tabs.register.classList.toggle("active", !isLogin);
+}
+
+function handleLogin() {
+    const email = document.getElementById("login-email").value;
+    const pass = document.getElementById("login-pass").value;
+
+    if (email.includes("@") && pass.length >= 4) {
+        localStorage.setItem("isLoggedIn", "true");
+        alert("सफलतापूर्वक लॉगिन हुआ!");
+        location.reload();
+    } else {
+        alert("कृपया सही ईमेल और पासवर्ड (मिनिमम 4 अक्षर) डालें।");
+    }
+}
+
+function handleRegister() {
+    const name = document.getElementById("reg-name").value;
+    const email = document.getElementById("reg-email").value;
+    const pass = document.getElementById("reg-pass").value;
+
+    if (name && email.includes("@") && pass.length >= 4) {
+        sendOTP(email, name);
+    } else {
+        alert("सभी फ़ील्ड सही से भरें।");
+    }
+}
+
+function handleLogout() {
+    if (confirm("क्या आप लॉगआउट करना चाहते हैं?")) {
+        localStorage.removeItem("isLoggedIn");
+        location.reload();
+    }
+}
+
+// --- 4. OTP & EmailJS Logic ---
+
+function showForgetSection() {
+    UI.sections.login.style.display = "none";
+    UI.sections.forget.style.display = "block";
+}
+
+function sendOTP(email, name = "User") {
+    generatedOTP = Math.floor(1000 + Math.random() * 9000);
+    
+    const params = {
+        to_email: email,
+        name: name,
+        otp_code: generatedOTP
+    };
+
+    emailjs.send(EMAIL_CONFIG.SERVICE_ID, EMAIL_CONFIG.TEMPLATE_ID, params)
+        .then(() => {
+            alert("OTP आपके ईमेल पर भेज दिया गया है।");
+            // Hide current sections and show OTP input
+            Object.values(UI.sections).forEach(s => s.style.display = "none");
+            UI.sections.otp.style.display = "block";
+        })
+        .catch(err => {
+            console.error("EmailJS Error:", err);
+            alert("OTP भेजने में विफलता। इंटरनेट चेक करें।");
+        });
+}
+
+function verifyOTP() {
+    const inputOTP = document.getElementById("otp-input-field").value;
+    if (inputOTP == generatedOTP) {
+        alert("वेरिफिकेशन सफल! अब आप लॉगिन कर सकते हैं।");
+        location.reload();
+    } else {
+        alert("गलत OTP, कृपया फिर से प्रयास करें।");
+    }
+}
+
+// --- 5. Professional Quiz Engine ---
+
+async function loadAutoQuestions(url) {
+    // अगर यूजर लॉगिन नहीं है तो क्विज़ नहीं चलेगा (Security)
     if (localStorage.getItem("isLoggedIn") !== "true") {
-        alert("क्विज़ शुरू करने के लिए कृपया लॉगिन करें!");
+        alert("क्विज़ शुरू करने के लिए पहले लॉगिन करें।");
+        toggleModal(true);
         return;
     }
 
     try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("File not found");
+        const response = await fetch(url);
+        const data = await response.text();
+        const rows = data.split('\n').slice(1); // Header हटाना
         
-        const text = await res.text();
-        const rows = text.split('\n').slice(1); // Header छोड़कर
-        
-        questions = rows.map(r => {
-            const c = r.split(',');
-            if(c.length < 6) return null;
-            return { 
-                q: c[0].trim(), 
-                opts: [c[1].trim(), c[2].trim(), c[3].trim(), c[4].trim()], 
-                a: parseInt(c[5].trim()), 
-                exp: c[6] ? c[6].trim() : "समाधान उपलब्ध नहीं है।" 
-            };
-        }).filter(q => q !== null);
+        quizState.questions = rows
+            .filter(row => row.trim() !== "")
+            .map(row => {
+                const cols = row.split(',');
+                return {
+                    q: cols[0],
+                    opts: [cols[1], cols[2], cols[3], cols[4]],
+                    a: parseInt(cols[5])
+                };
+            });
 
-        if(questions.length > 0) {
+        if (quizState.questions.length > 0) {
             startQuiz();
         } else {
-            alert("इस विषय में अभी सवाल उपलब्ध नहीं हैं।");
+            throw new Error("No questions found");
         }
-    } catch (e) { 
-        console.error("Load Error:", e);
-        alert("डेटा लोड करने में समस्या हुई। कृपया इंटरनेट चेक करें।");
+    } catch (error) {
+        console.error("Quiz Error:", error);
+        alert("क्विज़ लोड करने में समस्या आई।");
     }
 }
 
 function startQuiz() {
-    homeView.style.display = "none";
-    quizView.style.display = "block";
-    currentIdx = 0; 
-    score = 0;
-    showQuestion();
+    quizState.currentIdx = 0;
+    quizState.score = 0;
+    renderQuestion();
 }
 
-// --- 4. Question Display & Logic ---
-function showQuestion() {
-    clearInterval(timerInterval);
-    const q = questions[currentIdx];
-    
-    // UI Elements
-    const qCounter = document.getElementById('q-counter');
-    const qText = document.getElementById('q-text');
-    const box = document.getElementById('options-box');
-    const solutionBox = document.getElementById('solution-box');
+function renderQuestion() {
+    const question = quizState.questions[quizState.currentIdx];
+    const qTextElement = document.getElementById('q-text');
+    const optionsBox = document.getElementById('options-box');
 
-    // Reset UI
-    solutionBox.style.display = "none";
-    qCounter.innerText = `सवाल ${currentIdx + 1} / ${questions.length}`;
-    qText.innerText = q.q;
-    box.innerHTML = "";
-    
-    startTimer();
+    if (!qTextElement || !optionsBox) return;
 
-    q.opts.forEach((opt, i) => {
-        const b = document.createElement('button');
-        b.innerText = opt;
-        b.className = "option-btn";
-        b.onclick = () => handleAnswer(i, b);
-        box.appendChild(b);
+    qTextElement.innerText = `सवाल ${quizState.currentIdx + 1}: ${question.q}`;
+    optionsBox.innerHTML = "";
+
+    question.opts.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.innerText = option;
+        btn.className = "option-btn";
+        
+        btn.onclick = () => handleAnswer(index, btn);
+        optionsBox.appendChild(btn);
     });
 }
 
-function handleAnswer(selectedIndex, btn) {
-    clearInterval(timerInterval);
-    const q = questions[currentIdx];
-    const box = document.getElementById('options-box');
-    const solutionBox = document.getElementById('solution-box');
-    const solText = document.getElementById('solution-text');
+function handleAnswer(selectedIndex, selectedBtn) {
+    const correctIndex = quizState.questions[quizState.currentIdx].a;
     const allBtns = document.querySelectorAll('.option-btn');
-    
-    // सभी बटन्स डिसेबल करें
-    allBtns.forEach(b => b.disabled = true);
 
-    // सही/गलत लॉजिक
-    if(selectedIndex === q.a) {
-        if(btn) btn.classList.add('correct');
-        score += 1;
-    } else if (selectedIndex !== -1) {
-        if(btn) btn.classList.add('wrong');
-        allBtns[q.a].classList.add('correct'); // सही उत्तर को हाईलाइट करें
-        score -= NEGATIVE_MARK;
+    // Disable all buttons after click
+    allBtns.forEach(btn => btn.disabled = true);
+
+    if (selectedIndex === correctIndex) {
+        selectedBtn.classList.add('correct');
+        quizState.score++;
     } else {
-        // समय खत्म होने पर
-        allBtns[q.a].classList.add('correct');
+        selectedBtn.classList.add('wrong');
+        allBtns[correctIndex].classList.add('correct'); // सही जवाब दिखाएं
     }
 
-    // समाधान दिखाएं
-    solText.innerText = q.exp;
-    solutionBox.style.display = "block";
-}
-
-function nextQuestion() {
-    currentIdx++;
-    if(currentIdx < questions.length) {
-        showQuestion();
-    } else {
-        finishQuiz();
-    }
-}
-
-// --- 5. Timer & Completion ---
-function startTimer() {
-    timeLeft = 60;
-    const timerDisplay = document.getElementById('timer');
-    timerDisplay.innerText = `समय: 00:${timeLeft < 10 ? '0'+timeLeft : timeLeft}`;
-
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        timerDisplay.innerText = `समय: 00:${timeLeft < 10 ? '0'+timeLeft : timeLeft}`;
-        
-        if(timeLeft <= 0) { 
-            clearInterval(timerInterval); 
-            handleAnswer(-1, null); // समय समाप्त
+    // Delay for next question
+    setTimeout(() => {
+        quizState.currentIdx++;
+        if (quizState.currentIdx < quizState.questions.length) {
+            renderQuestion();
+        } else {
+            finishQuiz();
         }
-    }, 1000);
+    }, 1500);
 }
 
 function finishQuiz() {
-    const finalScore = score.toFixed(2);
-    alert(`🎉 टेस्ट समाप्त!\nआपका कुल स्कोर: ${finalScore} / ${questions.length}`);
-    location.reload(); // होम पर वापस जाने के लिए
+    const total = quizState.questions.length;
+    const percentage = (quizState.score / total) * 100;
+    
+    alert(`क्विज़ समाप्त!\nआपका स्कोर: ${quizState.score} / ${total}\nप्रतिशत: ${percentage.toFixed(2)}%`);
+    
+    // वापस होम पेज पर ले जाएं
+    window.location.href = "index.html";
 }
