@@ -1,4 +1,4 @@
-/* --- Google Fonts --- */
+७/* --- Google Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 :root {
@@ -355,4 +355,19 @@ header {
 @media (max-width: 600px) {
     .test-grid { grid-template-columns: 1fr; }
     .class-btn-container { grid-template-columns: repeat(2, 1fr); }
+}
+.explanation-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(0, 210, 255, 0.1);
+    border-left: 5px solid var(--primary-glow);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #fff;
+    text-align: left;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
 }
