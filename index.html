@@ -18,7 +18,7 @@
     </header>
 
     <div class="container" id="main-content">
-        <div class="card" style="margin-bottom: 30px; background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(58,123,213,0.2));">
+        <div class="card banner-card">
             <h1>नमस्ते! अपनी तैयारी शुरू करें</h1>
             <p>नीचे दिए गए विषयों में से चुनाव करें</p>
         </div>
@@ -62,12 +62,13 @@
                 <div class="input-group">
                     <input type="text" id="reg-name" placeholder="पूरा नाम">
                     <input type="email" id="reg-email" placeholder="ईमेल आईडी">
+                    <input type="password" id="reg-pass" placeholder="पासवर्ड बनाएं">
                 </div>
                 <button class="submit-btn" onclick="handleRegister()">OTP भेजें</button>
             </div>
 
             <div id="otp-section" class="auth-form" style="display:none;">
-                <input type="text" id="otp-input-field" placeholder="OTP यहाँ डालें" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px;">
+                <input type="text" id="otp-input-field" placeholder="OTP यहाँ डालें">
                 <button class="submit-btn" onclick="verifyOTP()">वेरिफाई करें</button>
             </div>
         </div>
