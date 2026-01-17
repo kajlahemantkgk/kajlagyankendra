@@ -1,7 +1,96 @@
 /**
  * KGK Education - Professional Quiz Engine
  * Features: CSV Loading, Negative Marking, Timer, Solution Box
- */
+ */// --- 4. Quiz Engine (Error Fixed & Professional Action) ---
+let questions = [];
+let currentIdx = 0;
+let score = 0;
+
+async function loadAutoQuestions(url) {
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("File not found"); // एरर हैंडलिंग जोड़ी गई
+        
+        const text = await res.text();
+        const rows = text.split('\n').slice(1); // Header हटाना
+        
+        questions = rows.map(r => {
+            const c = r.split(',');
+            if(c.length < 6) return null;
+            return { 
+                q: c[0].trim(), 
+                opts: [c[1].trim(), c[2].trim(), c[3].trim(), c[4].trim()], 
+                a: parseInt(c[5].trim()) 
+            };
+        }).filter(q => q !== null);
+
+        if(questions.length > 0) {
+            // UI Switch: होम छुपाएं और क्विज़ दिखाएं
+            document.getElementById("main-content").style.display = "none";
+            document.getElementById("quiz-view").style.display = "block";
+            startQuiz();
+        } else {
+            alert("CSV फ़ाइल खाली है या सही फ़ॉर्मेट में नहीं है।");
+        }
+    } catch (e) {
+        console.error("Quiz Load Error:", e);
+        alert("डेटा लोड करने में समस्या हुई। कृपया इंटरनेट और CSV फ़ाइल का पाथ चेक करें।");
+    }
+}
+
+function startQuiz() {
+    currentIdx = 0; 
+    score = 0;
+    showQuestion();
+}
+
+function showQuestion() {
+    const q = questions[currentIdx];
+    const qText = document.getElementById('q-text');
+    const box = document.getElementById('options-box');
+    const progBar = document.getElementById('progress-bar');
+    
+    // प्रोग्रेस बार अपडेट करें
+    if(progBar) progBar.style.width = ((currentIdx / questions.length) * 100) + "%";
+
+    qText.innerText = `${currentIdx + 1}. ${q.q}`;
+    box.innerHTML = "";
+    
+    q.opts.forEach((opt, i) => {
+        const b = document.createElement('button');
+        b.innerText = opt;
+        b.className = "option-btn";
+        b.onclick = () => handleSelection(i, b);
+        box.appendChild(b);
+    });
+}
+
+function handleSelection(selectedIndex, btn) {
+    const allBtns = document.querySelectorAll('.option-btn');
+    allBtns.forEach(b => b.disabled = true); // दोबारा क्लिक रोकें
+
+    const correctIdx = questions[currentIdx].a;
+
+    if (selectedIndex === correctIdx) {
+        btn.classList.add('correct');
+        score++;
+    } else {
+        btn.classList.add('wrong');
+        allBtns[correctIdx].classList.add('correct'); // सही जवाब दिखाना
+    }
+
+    // ऑटो-नेक्स्ट एक्शन
+    setTimeout(() => {
+        currentIdx++;
+        if (currentIdx < questions.length) {
+            showQuestion();
+        } else {
+            alert(`क्विज़ समाप्त! आपका स्कोर: ${score}/${questions.length}`);
+            location.reload();
+        }
+    }, 1500);
+}
+
 
 // --- 1. State Management ---
 let questions = [];
