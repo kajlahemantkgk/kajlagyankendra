@@ -3,76 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KGK Online Education | Best Quiz Portal</title>
+    <title>KGK Education | Smart Quiz Portal</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
     <header>
-        <div class="logo"><h2>KGK</h2></div> 
+        <div class="logo"><h2>KGK</h2></div>
         <nav class="nav-links">
             <a href="index.html">होम</a>
             <span class="auth-trigger" id="open-auth" onclick="checkLogout()">लॉगिन / रजिस्टर</span>
         </nav>
     </header>
 
-    <div class="container" id="main-content">
-        <div class="card banner-card">
-            <h1>नमस्ते! अपनी तैयारी शुरू करें</h1>
-            <p>नीचे दिए गए विषयों में से चुनाव करें</p>
-        </div>
-
+    <div class="container" id="home-view">
+        
         <h2 class="section-title">राजस्थान सामान्य ज्ञान</h2>
         <div class="test-grid">
-            <div class="card"><i class="fas fa-map-marked-alt fa-2x"></i><h3>राजस्थान भूगोल</h3><a href="raj-geo.html" class="btn-play">शुरू करें</a></div>
-            <div class="card"><i class="fas fa-history fa-2x"></i><h3>राजस्थान इतिहास</h3><a href="raj-hist.html" class="btn-play">शुरू करें</a></div>
-            <div class="card"><i class="fas fa-landmark fa-2x"></i><h3>राजस्थान राजनीति</h3><a href="raj-polity.html" class="btn-play">शुरू करें</a></div>
-            <div class="card"><i class="fas fa-palette fa-2x"></i><h3>राजस्थान कला-संस्कृति</h3><a href="raj-art.html" class="btn-play">शुरू करें</a></div>
+            <div class="card">
+                <i class="fas fa-map-marked-alt icon-style"></i>
+                <h3>राजस्थान भूगोल</h3>
+                <p>20 सवाल | 20 मिनट</p>
+                <button onclick="loadQuiz('raj-geo.csv')" class="btn-play">टेस्ट शुरू करें</button>
+            </div>
+            <div class="card">
+                <i class="fas fa-history icon-style"></i>
+                <h3>राजस्थान इतिहास</h3>
+                <p>20 सवाल | 20 मिनट</p>
+                <button onclick="loadQuiz('raj-hist.csv')" class="btn-play">टेस्ट शुरू करें</button>
+            </div>
         </div>
 
-        <h2 class="section-title">NCERT कक्षाएं</h2>
-        <div class="class-btn-container">
-            <a href="ncert6-main.html" class="class-box">6वीं कक्षा</a>
-            <a href="ncert7-main.html" class="class-box">7वीं कक्षा</a>
-            <a href="ncert8-main.html" class="class-box">8वीं कक्षा</a>
-            <a href="ncert9-main.html" class="class-box">9वीं कक्षा</a>
-            <a href="ncert10-main.html" class="class-box">10वीं कक्षा</a>
-            <a href="ncert11-main.html" class="class-box">11वीं कक्षा</a>
-            <a href="ncert12-main.html" class="class-box">12वीं कक्षा</a>
+        <h2 class="section-title">भारत सामान्य ज्ञान</h2>
+        <div class="test-grid">
+            <div class="card">
+                <i class="fas fa-globe-asia icon-style"></i>
+                <h3>भारत भूगोल</h3>
+                <p>25 सवाल | 25 मिनट</p>
+                <button onclick="loadQuiz('india-geo.csv')" class="btn-play">टेस्ट शुरू करें</button>
+            </div>
+            <div class="card">
+                <i class="fas fa-landmark icon-style"></i>
+                <h3>भारत राजनीति</h3>
+                <p>25 सवाल | 25 मिनट</p>
+                <button onclick="loadQuiz('india-polity.csv')" class="btn-play">टेस्ट शुरू करें</button>
+            </div>
+            <div class="card">
+                <i class="fas fa-monument icon-style"></i>
+                <h3>भारत इतिहास</h3>
+                <p>25 सवाल | 25 मिनट</p>
+                <button onclick="loadQuiz('india-hist.csv')" class="btn-play">टेस्ट शुरू करें</button>
+            </div>
+        </div>
+
+        <h2 class="section-title">NCERT कक्षाएं (6वीं - 12वीं)</h2>
+        <div class="ncert-grid">
+            <button class="class-btn" onclick="loadQuiz('ncert6.csv')">कक्षा 6</button>
+            <button class="class-btn" onclick="loadQuiz('ncert7.csv')">कक्षा 7</button>
+            <button class="class-btn" onclick="loadQuiz('ncert8.csv')">कक्षा 8</button>
+            <button class="class-btn" onclick="loadQuiz('ncert9.csv')">कक्षा 9</button>
+            <button class="class-btn" onclick="loadQuiz('ncert10.csv')">कक्षा 10</button>
+            <button class="class-btn" onclick="loadQuiz('ncert11.csv')">कक्षा 11</button>
+            <button class="class-btn" onclick="loadQuiz('ncert12.csv')">कक्षा 12</button>
+        </div>
+    </div>
+
+    <div class="container" id="quiz-view" style="display: none;">
+        <div class="quiz-container">
+            <div id="quiz-header">
+                <span id="q-counter">सवाल 1</span>
+                <span id="timer">समय: 00:00</span>
+            </div>
+            <h3 id="q-text">लोड हो रहा है...</h3>
+            <div id="options-box"></div>
+            
+            <div id="solution-box">
+                <strong style="color: #1a73e8;">समाधान:</strong>
+                <p id="solution-text"></p>
+                <button onclick="nextQuestion()" class="submit-btn">अगला सवाल</button>
+            </div>
         </div>
     </div>
 
     <div class="modal" id="authModal" style="display: none;">
-        <div class="auth-card">
-            <div class="auth-tabs">
-                <button id="login-tab-btn" class="tab-btn active" onclick="switchTab('login')">लॉगिन</button>
-                <button id="reg-tab-btn" class="tab-btn" onclick="switchTab('register')">रजिस्टर</button>
-            </div>
-            
-            <div id="login-section" class="auth-form">
-                <div class="input-group">
-                    <input type="email" id="login-email" placeholder="ईमेल आईडी">
-                    <input type="password" id="login-pass" placeholder="पासवर्ड">
-                </div>
-                <button class="submit-btn" onclick="handleLogin()">प्रवेश करें</button>
-            </div>
-
-            <div id="reg-section" class="auth-form" style="display:none;">
-                <div class="input-group">
-                    <input type="text" id="reg-name" placeholder="पूरा नाम">
-                    <input type="email" id="reg-email" placeholder="ईमेल आईडी">
-                    <input type="password" id="reg-pass" placeholder="पासवर्ड बनाएं">
-                </div>
-                <button class="submit-btn" onclick="handleRegister()">OTP भेजें</button>
-            </div>
-
-            <div id="otp-section" class="auth-form" style="display:none;">
-                <input type="text" id="otp-input-field" placeholder="OTP यहाँ डालें">
-                <button class="submit-btn" onclick="verifyOTP()">वेरिफाई करें</button>
-            </div>
         </div>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>emailjs.init("Ff_fHMoX3s88PvoMe");</script>
